@@ -1,0 +1,40 @@
+SET NULL '<Null>'
+SQL> COLUMN rental_item_id     FORMAT 99999 HEADING "Rental|Item ID #"
+SQL> COLUMN rental_id	       FORMAT 99999 HEADING "Rental|ID #"
+SQL> COLUMN item_id	       FORMAT 99999 HEADING "Item|ID #"
+SQL> COLUMN rental_item_price  FORMAT 99999 HEADING "Rental|Item|Price"
+SQL> COLUMN rental_item_type   FORMAT 99999 HEADING "Rental|Item|Type"
+SQL> COLUMN created_by	       FORMAT 9999 HEADING "Created|By"
+SQL> COLUMN creation_date      FORMAT A10  HEADING "Creation|Date"
+SQL> COLUMN last_updated_by    FORMAT 9999 HEADING "Last|Update|By"
+SQL> COLUMN last_update_date   FORMAT A10  HEADING "Last|Updated"
+SQL> 
+SQL> 
+SQL> 
+SQL> SELECT NVL(ri.rental_item_id,rental_item_s1.NEXTVAL)
+  2   ,        r.rental_id
+  3   ,        tu.item_id
+  4   ,        1002 AS created_by
+  5   ,        TRUNC(SYSDATE) AS creation_date
+  6   ,        1002 AS last_updated_by
+  7   ,        TRUNC(SYSDATE) AS last_update_date
+  8   ,        cl.common_lookup_id AS rental_item_type
+  9   ,        r.return_date - r.check_out_date AS rental_item_price
+ 10   FROM     member m
+ 11   INNER JOIN contact c
+ 12   ON       m.member_id = c.member_id
+ 13   INNER JOIN transaction_upload tu
+ 14   ON       c.first_name = tu.first_name
+ 15   AND      NVL(c.middle_name,'x') = NVL(tu.middle_name,'x')
+ 16   AND      c.last_name = tu.last_name
+ 17   AND      tu.account_number = m.account_number
+ 18   LEFT JOIN rental r
+ 19  ON c.contact_id = r.customer_id
+ 20  AND TRUNC(tu.check_out_date) = TRUNC(r.check_out_date)
+ 21  AND TRUNC(tu.check_out_date) = TRUNC(r.check_out_date)
+ 22  INNER JOIN common_lookup cl
+ 23  ON cl.common_lookup_table = 'RENTAL_ITEM'
+ 24  AND cl.common_lookup_column = 'RENTAL_ITEM_TYPE'
+ 25  AND cl.common_lookup_type = tu.rental_item_type
+ 26  LEFT JOIN rental_item ri
+ 27  ON r.rental_id = ri.rental_id;

@@ -1,0 +1,15 @@
+insert into enrollement(id_enrollement,id_registeration,id_student)
+value(Default,7,6),
+(default,6,7),
+(default,8,7),
+(default,9,7),
+(default,5,4),
+(default,8,9),
+(default,4,4),
+(default,4,3),
+(default,4,5),
+(default,5,5),
+(default,1,1),
+(default,3,1),
+(default,8,8),
+(default,6,10)

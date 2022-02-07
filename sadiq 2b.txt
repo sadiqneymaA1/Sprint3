@@ -1,0 +1,28 @@
+INSERT INTO rental_item
+  2  (SELECT NVL(ri.rental_item_id,rental_item_s1.NEXTVAL)
+  3   ,        r.rental_id
+  4   ,        tu.item_id
+  5   ,        1002 AS created_by
+  6   ,        TRUNC(SYSDATE) AS creation_date
+  7   ,        1002 AS last_updated_by
+  8   ,        TRUNC(SYSDATE) AS last_update_date
+  9   ,        cl.common_lookup_id AS rental_item_type
+ 10   ,        r.return_date - r.check_out_date AS rental_item_price
+ 11   FROM     member m
+ 12   INNER JOIN contact c
+ 13   ON       m.member_id = c.member_id
+ 14   INNER JOIN transaction_upload tu
+ 15   ON       c.first_name = tu.first_name
+ 16   AND      NVL(c.middle_name,'x') = NVL(tu.middle_name,'x')
+ 17   AND      c.last_name = tu.last_name
+ 18   AND      tu.account_number = m.account_number
+ 19   LEFT JOIN rental r
+ 20  ON c.contact_id = r.customer_id
+ 21  AND TRUNC(tu.check_out_date) = TRUNC(r.check_out_date)
+ 22  AND TRUNC(tu.check_out_date) = TRUNC(r.check_out_date)
+ 23  INNER JOIN common_lookup cl
+ 24  ON cl.common_lookup_table = 'RENTAL_ITEM'
+ 25  AND cl.common_lookup_column = 'RENTAL_ITEM_TYPE'
+ 26  AND cl.common_lookup_type = tu.rental_item_type
+ 27  LEFT JOIN rental_item ri
+ 28  ON r.rental_id = ri.rental_id);
