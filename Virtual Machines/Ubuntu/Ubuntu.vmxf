@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<Foundry>
-<VM>
-<VMId type="string">52 60 61 cb 1c a4 02 80-b5 c8 85 d4 35 18 51 ea</VMId>
-<ClientMetaData>
-<clientMetaDataAttributes/>
-<HistoryEventList/></ClientMetaData>
-<vmxPathName type="string">Ubuntu.vmx</vmxPathName></VM></Foundry>
